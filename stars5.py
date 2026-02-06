@@ -379,7 +379,7 @@ def help_transfer(message):
 """
     )
     
-#===== انتقال در گروه====
+#===== انتقال در گروه===
 @bot.message_handler(
     func=lambda m: (
         m.chat.type in ["group", "supergroup"]
