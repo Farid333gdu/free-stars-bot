@@ -380,9 +380,6 @@ def help_transfer(message):
     )
     
 #===== انتقال در گروه====
-def user_tag(user):
-    return f"@{user.username}" if user.username else f"{user.first_name}"
-
 @bot.message_handler(
     func=lambda m: (
         m.chat.type in ["group", "supergroup"]
@@ -395,7 +392,6 @@ def user_tag(user):
 def group_transfer(message):
     sender_user = message.from_user
     receiver_user = message.reply_to_message.from_user
-
     sender = sender_user.id
     receiver = receiver_user.id
 
@@ -412,47 +408,50 @@ def group_transfer(message):
         bot.reply_to(message, "❌ هر دو کاربر باید ربات را start کرده باشند")
         return
 
-    # مقدار
-    parts = message.text.split()
-    if len(parts) != 2 or not parts[1].isdigit():
-        bot.reply_to(message, "❌ فرمت صحیح:\nانتقال 5")
-        return
-
-    amount = int(parts[1])
-    balance = s[0]
-
-    if balance < amount:
+    now = int(time.time())
+    if now - s[1] < TRANSFER_COOLDOWN:
         bot.reply_to(
             message,
-            f"❌ موجودی کافی نیست\n⭐ موجودی شما: {balance}"
+            f"⏳ لطفاً {TRANSFER_COOLDOWN} ثانیه بین انتقال‌ها صبر کن"
+        )
+        return
+
+    try:
+        amount = int(message.text.split()[1])
+        if amount <= 0:
+            raise ValueError
+    except:
+        bot.reply_to(message, "❌ فرمت صحیح: انتقال 5")
+        return
+
+    if s[0] < amount:
+        bot.reply_to(
+            message,
+            f"❌ موجودی کافی نیست\n💰 موجودی شما: {s[0]}"
         )
         return
 
     # انتقال
     cur.execute(
-        "UPDATE users SET balance = balance - ? WHERE user_id=?",
-        (amount, sender)
+        "UPDATE users SET balance=balance-?, last_transfer=? WHERE user_id=?",
+        (amount, now, sender)
     )
     cur.execute(
-        "UPDATE users SET balance = balance + ? WHERE user_id=?",
+        "UPDATE users SET balance=balance+? WHERE user_id=?",
         (amount, receiver)
     )
     db.commit()
 
-    # پیام گروه (ریپلای به دریافت‌کننده)
     group_text = f"""
 💰 مقدار {amount} STARS  
-👤 از: {user_tag(sender_user)}  
-👤 به: {user_tag(receiver_user)}  
+👤 از: {user_tag(sender_user)} (ID: {sender})  
+👤 به: {user_tag(receiver_user)} (ID: {receiver})  
 
-✅ انتقال با موفقیت انجام شد  
+✅ انتقال با موفقیت انجام شد
 ❤️‍🔥 @FreeStarsxbot ❤️‍🔥
 """
-    bot.send_message(
-        message.chat.id,
-        group_text,
-        reply_to_message_id=message.reply_to_message.message_id
-    )
+
+    bot.reply_to(message, group_text)
 
     # نوتیف خصوصی
     try:
@@ -466,19 +465,11 @@ def group_transfer(message):
     try:
         bot.send_message(
             receiver,
-            f"🎉 {amount} STARS از {user_tag(sender_user)} دریافت کردید"
+            f"🎉 {user_tag(sender_user)} مقدار {amount} STARS به شما انتقال داد"
         )
     except:
         pass
-bot.reply_to(message, group_text)
-
-bot.send_message(
-    chat_id=message.chat.id,
-    text=text,
-    reply_to_message_id=message.reply_to_message.message_id
-)
-    
-   
+        
 #=====انتقال موجودی =====
 @bot.message_handler(func=lambda m: m.text == "💰 انتقال موجودی")
 def transfer_start(message):
