@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS users (
     last_transfer INTEGER DEFAULT 0,
     last_withdraw INTEGER DEFAULT 0
 )
-"")
+""")
 
 cur.execute("""
 CREATE TABLE IF NOT EXISTS settings (
