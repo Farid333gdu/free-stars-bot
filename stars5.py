@@ -380,7 +380,6 @@ def help_transfer(message):
     )
     
 #===== انتقال در گروه====
-amount = int(message.text.split()[1])
 def user_tag(user):
     return f"@{user.username}" if user.username else f"{user.first_name}"
 
