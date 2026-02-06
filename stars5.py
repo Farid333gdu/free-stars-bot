@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS settings (
     value TEXT
 )
 "")
-
+db.commit()
 cur.execute(
     "INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)",
     ("invite_reward", "1")
