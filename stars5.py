@@ -9,7 +9,6 @@ from datetime import datetime, timedelta
 from flask import Flask
 from threading import Thread
 import re
-from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
 import random
 
