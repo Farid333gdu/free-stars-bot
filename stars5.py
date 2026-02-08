@@ -50,12 +50,15 @@ bot = TeleBot(TOKEN, parse_mode="HTML")
 
 # ================== دیتابیس ==================
 
+
+# ================== توابع کمکی ==================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "bot.db")
 
 db = sqlite3.connect(DB_PATH, check_same_thread=False)
 cur = db.cursor()
 
+# ================= USERS =================
 cur.execute("""
 CREATE TABLE IF NOT EXISTS users (
     user_id INTEGER PRIMARY KEY,
@@ -73,6 +76,7 @@ CREATE TABLE IF NOT EXISTS users (
 )
 """)
 
+# ================= SETTINGS =================
 cur.execute("""
 CREATE TABLE IF NOT EXISTS settings (
     key TEXT PRIMARY KEY,
@@ -85,33 +89,32 @@ INSERT OR IGNORE INTO settings (key, value)
 VALUES ('invite_reward', '1')
 """)
 
+# ================= TASKS =================
 cur.execute("""
 CREATE TABLE IF NOT EXISTS tasks (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT,
+    title TEXT NOT NULL,
     description TEXT,
     link TEXT,
-    reward INTEGER,
+    reward INTEGER NOT NULL,
+    daily INTEGER DEFAULT 0,
     active INTEGER DEFAULT 1
 )
 """)
 
+# ================= TASK REQUESTS (SHOTS) =================
 cur.execute("""
-CREATE TABLE IF NOT EXISTS task_submits (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    task_id INTEGER,
+CREATE TABLE IF NOT EXISTS task_requests (
     user_id INTEGER,
+    task_id INTEGER,
     photo_id TEXT,
-    status TEXT DEFAULT 'pending'
+    status TEXT DEFAULT 'pending', -- pending / approved / rejected
+    created_at TEXT,
+    PRIMARY KEY (user_id, task_id)
 )
 """)
 
 db.commit()
-
-
-
-# ================== توابع کمکی ==================
-
 def is_admin(uid):
     return uid == OWNER_ID or uid in ADMINS
 
@@ -180,6 +183,14 @@ def init_db():
     conn.close()
 
 init_db()
+db = sqlite3.connect("data.db", check_same_thread=False)
+cur = db.cursor()
+FOREIGN KEY (user_id) REFERENCES users(user_id),
+FOREIGN KEY (task_id) REFERENCES tasks(id)
+
+CREATE INDEX IF NOT EXISTS idx_task_requests_status
+ON task_requests(status);
+created_at TEXT DEFAULT CURRENT_TIMESTAMP
 
 # ================== متغیرهای حالت ==================
 
