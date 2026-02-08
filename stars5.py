@@ -1447,6 +1447,7 @@ def apply_reward(message):
                 f"🎉 تبریک!\n🏆 به‌عنوان برترین دعوت‌کننده، {amount} امتیاز گرفتی"
             )
         except:
+            pass
       #===== پیام همگانی ====
 @bot.message_handler(commands=['broadcast'])
 def start_broadcast(message):
