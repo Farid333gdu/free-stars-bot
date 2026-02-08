@@ -183,34 +183,35 @@ def init_db():
     conn = sqlite3.connect("data.db")
     cursor = conn.cursor()
 
+    
+cur.execute("""
+def init_db():
+    conn = sqlite3.connect("data.db", check_same_thread=False)
+    cur = conn.cursor()
+
     cur.execute("""
-CREATE TABLE IF NOT EXISTS task_requests (
-    user_id INTEGER,
-    task_id INTEGER,
-    photo_id TEXT,
-    status TEXT DEFAULT 'pending',
-    created_at TEXT,
-    PRIMARY KEY (user_id, task_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (task_id) REFERENCES tasks(id)
-)
-""")
+    CREATE TABLE IF NOT EXISTS task_requests (
+        user_id INTEGER,
+        task_id INTEGER,
+        photo_id TEXT,
+        status TEXT DEFAULT 'pending',
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (user_id, task_id),
+        FOREIGN KEY (user_id) REFERENCES users(user_id),
+        FOREIGN KEY (task_id) REFERENCES tasks(id)
+    )
+    """)
+
+    cur.execute("""
+    CREATE INDEX IF NOT EXISTS idx_task_requests_status
+    ON task_requests(status)
+    """)
 
     conn.commit()
     conn.close()
-
-init_db()
-db = sqlite3.connect("data.db", check_same_thread=False)
-cur = db.cursor()
-FOREIGN KEY (user_id) REFERENCES users(user_id),
-FOREIGN KEY (task_id) REFERENCES tasks(id)
-
-CREATE INDEX IF NOT EXISTS idx_task_requests_status
-ON task_requests(status);
-created_at TEXT DEFAULT CURRENT_TIMESTAMP
-
+    
 # ================== متغیرهای حالت ==================
-
+init_db()
 transfer_state = {}
 withdraw_requests = {}
 admin_steps = {}
