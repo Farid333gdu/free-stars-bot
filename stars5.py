@@ -183,14 +183,18 @@ def init_db():
     conn = sqlite3.connect("data.db")
     cursor = conn.cursor()
 
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS users (
-        user_id INTEGER PRIMARY KEY,
-        username TEXT,
-        score INTEGER DEFAULT 0,
-        join_date TEXT
-    )
-    """)
+    cur.execute("""
+CREATE TABLE IF NOT EXISTS task_requests (
+    user_id INTEGER,
+    task_id INTEGER,
+    photo_id TEXT,
+    status TEXT DEFAULT 'pending',
+    created_at TEXT,
+    PRIMARY KEY (user_id, task_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (task_id) REFERENCES tasks(id)
+)
+""")
 
     conn.commit()
     conn.close()
