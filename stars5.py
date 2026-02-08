@@ -1917,4 +1917,4 @@ def set_transfer_group(message):
 
 
 # ================= اجرای ربات =================
-bot.infinity_polling(skip_pending=True)      pass
+bot.infinity_polling(skip_pending=True)      
