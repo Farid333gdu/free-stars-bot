@@ -101,6 +101,13 @@ CREATE TABLE IF NOT EXISTS tasks (
     active INTEGER DEFAULT 1
 )
 """)
+cur.execute("""
+SELECT user_id, invite_count
+FROM users
+ORDER BY invite_count DESC
+LIMIT 10
+""")
+top_users = cur.fetchall()
 
 # ================= TASK REQUESTS (SHOTS) =================
 cur.execute("""
@@ -113,6 +120,12 @@ CREATE TABLE IF NOT EXISTS task_requests (
     PRIMARY KEY (user_id, task_id)
 )
 """)
+cur.execute("""
+UPDATE users
+SET invite_count = invite_count + 1
+WHERE user_id = ?
+""", (inviter_id,))
+db.commit()
 
 db.commit()
 def is_admin(uid):
@@ -200,7 +213,7 @@ admin_steps = {}
 convert_state = {}
 broadcast_data = {}
 USERS_PER_PAGE = 50
-
+WHERE invite_count > 0
 # ================= منو =================
 
 def main_menu():
