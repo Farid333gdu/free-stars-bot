@@ -469,7 +469,7 @@ def help_handler(message):
         reply_markup=main_menu()
     )
 #===== تبدیل امتیاز به استارز ====
-@bot.message_handler(func=lambda m: m.text == "🔄 تبدیل امتیاز به استارز")
+@bot.message_handler(func=lambda m: m.text == "تبدیل امتیاز به استارز")
 def start_convert(message):
     uid = message.from_user.id
 
@@ -490,12 +490,12 @@ def start_convert(message):
     convert_state[uid] = True
 
     kb = InlineKeyboardMarkup()
-    kb.add(InlineKeyboardButton("↩️ لغو", callback_data="cancel_convert"))
+    kb.add(InlineKeyboardButton(" لغو", callback_data="cancel_convert"))
 
     bot.send_message(
         message.chat.id,
         f"""
-🔄 تبدیل امتیاز به استارز
+ تبدیل امتیاز به استارز
 
 ⭐ امتیاز شما: {row[0]}
 
