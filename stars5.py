@@ -138,7 +138,7 @@ UPDATE users
 SET points = points - ?, 
     balance = balance + ?
 WHERE user_id = ?
-""", (used_points, stars, uid))
+""", (amount, stars, uid)
 db.commit()
 # ================= کاربران برتر دعوت =================
 def get_top_invites():
