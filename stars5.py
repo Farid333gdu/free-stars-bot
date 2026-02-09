@@ -1525,7 +1525,6 @@ def add_task(message):
     db.commit()
 
     bot.send_message(message.chat.id, " تسک نمونه اضافه شد")
-    
 @bot.message_handler(commands=["tasks"])
 def admin_tasks(message):
     if not is_admin(message.from_user.id):
@@ -1542,15 +1541,17 @@ def admin_tasks(message):
 
     text = "📋 لیست تسک‌ها:\n\n"
 
-for t in rows:
-    status = "فعال" if t[3] else "غیرفعال"
-    text += f"""
-ID: {t[0]}
+    for t in rows:
+        status = "فعال" if t[3] else "غیرفعال"
+        text += f"""ID: {t[0]}
 {t[1]}
 {t[2]} امتیاز
 وضعیت: {status}
 
 """
+
+    bot.send_message(message.chat.id, text)
+
 
 bot.send_message(message.chat.id, text)
   
