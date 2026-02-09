@@ -125,13 +125,22 @@ ON task_requests(status)
 """)
 
 db.commit()
-cur.execute("""
-UPDATE users 
-SET points = points - ?, 
-    balance = balance + ? 
-WHERE user_id = ?
-""", (used_points, stars, uid))
-db.commit()
+
+cur.execute("SELECT points FROM users WHERE user_id=?", (uid,))
+row = cur.fetchone()
+
+if not row:
+    bot.send_message(message.chat.id, "کاربر یافت نشد")
+    return
+
+points = row[0]
+
+if points < 10:
+    bot.send_message(message.chat.id, "حداقل 10 امتیاز برای تبدیل نیاز است")
+    return
+
+stars = points // 10
+used_points = stars * 10
 
 # ================= کوئری عمومی امن =================
 def execute_query(query, params=()):
@@ -140,7 +149,13 @@ def execute_query(query, params=()):
     c.execute(query, params)
     conn.commit()
     conn.close()
-
+cur.execute("""
+UPDATE users 
+SET points = points - ?, 
+    balance = balance + ?
+WHERE user_id = ?
+""", (used_points, stars, uid))
+db.commit()
 # ================= کاربران برتر دعوت =================
 def get_top_invites():
     conn = sqlite3.connect(DB_PATH)
