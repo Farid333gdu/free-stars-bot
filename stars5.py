@@ -1552,15 +1552,6 @@ def admin_tasks(message):
 """
 
     bot.send_message(message.chat.id, text)
-
-    bot.send_message(message.chat.id, text)
-
-    bot.send_message(message.chat.id, text)
-
-
-bot.send_message(message.chat.id, text)
-  
-    bot.send_message(message.chat.id, text)
     
 @bot.message_handler(commands=["edittask"])
 def edit_task_menu(message):
