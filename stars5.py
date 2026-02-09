@@ -126,7 +126,12 @@ ON task_requests(status)
 
 db.commit()
 
-
+def execute_query(query, params=()):
+    conn = sqlite3.connect("data.db")
+    cur = conn.cursor()
+    cur.execute(query, params)
+    conn.commit()
+    conn.close()
 # ================= کوئری کاربران برتر دعوت =================
 cur.execute("""
 SELECT user_id, invite_count
