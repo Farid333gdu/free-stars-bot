@@ -1541,13 +1541,18 @@ def admin_tasks(message):
         return
 
     text = "📋 لیست تسک‌ها:\n\n"
-    for t in rows:
-        status = " فعال" if t[3] else " غیرفعال"
-        text += f"""
- ID: {t[0]}
- {t[1]}
- {t[2]} امتیاز
-  وضعیت: {status}
+
+for t in rows:
+    status = "فعال" if t[3] else "غیرفعال"
+    text += f"""
+ID: {t[0]}
+{t[1]}
+{t[2]} امتیاز
+وضعیت: {status}
+
+"""
+
+bot.send_message(message.chat.id, text)
   
     bot.send_message(message.chat.id, text)
     
