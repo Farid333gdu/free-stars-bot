@@ -1525,6 +1525,7 @@ def add_task(message):
     db.commit()
 
     bot.send_message(message.chat.id, " تسک نمونه اضافه شد")
+
 @bot.message_handler(commands=["tasks"])
 def admin_tasks(message):
     if not is_admin(message.from_user.id):
@@ -1549,6 +1550,10 @@ def admin_tasks(message):
 وضعیت: {status}
 
 """
+
+    bot.send_message(message.chat.id, text)
+
+    bot.send_message(message.chat.id, text)
 
     bot.send_message(message.chat.id, text)
 
