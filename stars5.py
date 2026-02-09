@@ -771,7 +771,7 @@ def reject_task(call):
     bot.answer_callback_query(call.id, "رد شد")
     bot.send_message(uid, "تسکت رد شد")
   # ================= پشتیبانی =================
-@bot.message_handler(func=lambda m: m.text == " پشتیبانی")
+@bot.message_handler(func=lambda m: m.text == "پشتیبانی")
 def support(message):
     bot.send_message(message.chat.id, f" پشتیبانی:\n{SUPPORT_ID}")
 
@@ -960,7 +960,7 @@ def reject_withdraw(c):
         f" برداشت استارز شما رد شد\n مقدار: {amount}"
     )
 # ================= دعوت دوستان =================
-@bot.message_handler(func=lambda m: m.text == " دعوت دوستان")
+@bot.message_handler(func=lambda m: m.text == "دعوت دوستان")
 def invite_friends(message):
     uid = message.from_user.id
     link = f"https://t.me/{bot.get_me().username}?start={uid}"
