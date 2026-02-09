@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS tasks (
 )
 """)
 
-# ================= TASK REQUESTS (SHOTS) =================
+# ================= TASK REQUESTS =================
 cur.execute("""
 CREATE TABLE IF NOT EXISTS task_requests (
     user_id INTEGER,
@@ -126,21 +126,28 @@ ON task_requests(status)
 
 db.commit()
 
+# ================= کوئری عمومی امن =================
 def execute_query(query, params=()):
-    conn = sqlite3.connect("data.db")
-    cur = conn.cursor()
-    cur.execute(query, params)
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute(query, params)
     conn.commit()
     conn.close()
-# ================= کوئری کاربران برتر دعوت =================
-cur.execute("""
-SELECT user_id, invite_count
-FROM users
-ORDER BY invite_count DESC
-LIMIT 10
-""")
-top_users = cur.fetchall()
 
+# ================= کاربران برتر دعوت =================
+def get_top_invites():
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("""
+    SELECT user_id, invite_count
+    FROM users
+    WHERE invite_count > 0
+    ORDER BY invite_count DESC
+    LIMIT 10
+    """)
+    rows = c.fetchall()
+    conn.close()
+    return rows
 
 # ================= افزایش تعداد دعوت =================
 def increase_invite(inviter_id):
@@ -151,9 +158,7 @@ def increase_invite(inviter_id):
     """, (inviter_id,))
     db.commit()
 
-
 # ================= توابع مدیریتی =================
-
 def is_admin(uid):
     return uid == OWNER_ID or uid in ADMINS
 
@@ -186,9 +191,7 @@ def remove_emojis(text):
     )
     return emoji_pattern.sub("", text)
 
-
 # ================= توابع دیتابیس =================
-
 def get_all_users():
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
@@ -200,34 +203,41 @@ def get_all_users():
 
 def get_users(limit, offset):
     conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-
-    cur.execute("""
+    c = conn.cursor()
+    c.execute("""
         SELECT user_id, points, invite_count
         FROM users
         ORDER BY points DESC
         LIMIT ? OFFSET ?
     """, (limit, offset))
-
-    users = cur.fetchall()
+    users = c.fetchall()
     conn.close()
     return users
 
-
-# ================= init_db نهایی =================
-
+# ================= init_db نهایی (ایمن و بدون خطا) =================
 def init_db():
-    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
-    cur = conn.cursor()
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
 
-    cur.execute("""
+    c.execute("""
     CREATE TABLE IF NOT EXISTS users (
         user_id INTEGER PRIMARY KEY,
-        score INTEGER DEFAULT 0
+        balance REAL DEFAULT 0,
+        points INTEGER DEFAULT 0,
+        score INTEGER DEFAULT 0,
+        join_date TEXT,
+        last_active TEXT,
+        invite_count INTEGER DEFAULT 0,
+        transfer_count INTEGER DEFAULT 0,
+        order_count INTEGER DEFAULT 0,
+        invited_by INTEGER,
+        last_transfer INTEGER DEFAULT 0,
+        last_withdraw INTEGER DEFAULT 0,
+        captcha_passed INTEGER DEFAULT 0
     )
     """)
 
-    cur.execute("""
+    c.execute("""
     CREATE TABLE IF NOT EXISTS task_requests (
         user_id INTEGER,
         task_id INTEGER,
@@ -240,19 +250,13 @@ def init_db():
     )
     """)
 
-    cur.execute("""
+    c.execute("""
     CREATE INDEX IF NOT EXISTS idx_task_requests_status
     ON task_requests(status)
     """)
 
     conn.commit()
     conn.close()
-    cur.execute("""
-SELECT user_id, invite_count
-FROM users
-WHERE invite_count > 0
-ORDER BY invite_count DESC
-""")
 # ================== متغیرهای حالت ==================
 init_db()
 transfer_state = {}
