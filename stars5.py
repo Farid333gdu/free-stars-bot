@@ -482,7 +482,7 @@ def start_convert(message):
     if not row or row[0] < 10:
         bot.send_message(
             message.chat.id,
-            "حداقل ۱۰ امتیاز برای تبدیل لازم است",
+            "حداقل 10 امتیاز برای تبدیل لازم است",
             reply_markup=main_menu()
         )
         return
@@ -518,11 +518,11 @@ def do_convert(message):
 
     # قوانین
     if amount < 10:
-        bot.send_message(message.chat.id, "حداقل مقدار ۱۰ است")
+        bot.send_message(message.chat.id, "حداقل مقدار 10 است")
         return
 
     if amount % 10 != 0:
-        bot.send_message(message.chat.id, "فقط مضرب ۱۰ مجاز است")
+        bot.send_message(message.chat.id, "فقط مضرب 10 مجاز است")
         return
 
     if amount > points:
