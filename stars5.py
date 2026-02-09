@@ -125,6 +125,13 @@ ON task_requests(status)
 """)
 
 db.commit()
+cur.execute("""
+UPDATE users 
+SET points = points - ?, 
+    balance = balance + ? 
+WHERE user_id = ?
+""", (used_points, stars, uid))
+db.commit()
 
 # ================= کوئری عمومی امن =================
 def execute_query(query, params=()):
@@ -265,6 +272,12 @@ admin_steps = {}
 convert_state = {}
 broadcast_data = {}
 USERS_PER_PAGE = 50
+from telebot.types import ReplyKeyboardMarkup, KeyboardButton
+
+def back_menu():
+    kb = ReplyKeyboardMarkup(resize_keyboard=True)
+    kb.add(KeyboardButton(" برگشت"))
+    return kb
 # ================= منو =================
 
 def main_menu():
