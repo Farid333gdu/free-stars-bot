@@ -223,11 +223,11 @@ WHERE invite_count > 0
 
 def main_menu():
     kb = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
-    kb.add("🆔حساب کاربری")
-    kb.add("⭐ برداشت استارز", "🎁 دعوت دوستان")
-    kb.add("🔄 تبدیل امتیاز به استارز")
-    kb.add("📘 راهنما", "📞 پشتیبانی")
-    kb.add("🧩 تسک‌ها")
+    kb.add("حساب کاربری")
+    kb.add(" برداشت استارز"٫"دعوت دوستان")
+    kb.add(" تبدیل امتیاز به استارز")
+    kb.add(" راهنما", " پشتیبانی")
+    kb.add(" تسک‌ها")
     return kb
 
 # ================= بررسی عضویت =================
@@ -922,13 +922,13 @@ def invite_friends(message):
     bot.send_message(
         message.chat.id,
         f"""
-"🎁 دعوت دوستان"
+"دعوت دوستان"
 
-"🏆 هر دعوت  = امتیاز بیشتر"
-"⭐ هر 10 امتیاز = 1 استارز"
-"⚠️ هر کاربر فقط یک‌بار حساب می‌شود"
+" هر دعوت  = امتیاز بیشتر"
+"هر 10 امتیاز = 1 استارز"
+"هر کاربر فقط یک‌بار حساب می‌شود"
 
-"🔗 لینک دعوت شما:"
+"لینک دعوت شما:"
 {link}
 """,
         reply_markup=main_menu()
@@ -962,8 +962,8 @@ def set_transfer_group(message):
 
     bot.reply_to(
         message,
-        f"✅ این گروه به عنوان گروه انتقال ثبت شد\n"
-        f"🆔 آیدی گروه: `{group_id}`"
+        f" این گروه به عنوان گروه انتقال ثبت شد\n"
+        f" آیدی گروه: `{group_id}`"
     )
     
 # ================= حذف کاربر =================
@@ -1164,7 +1164,7 @@ def bot_on(message):
         return
 
     BOT_ACTIVE = True
-    bot.send_message(message.chat.id, "✅ ربات فعال شد")
+    bot.send_message(message.chat.id, "ربات فعال شد")
 
     
 #=====آمار=====
@@ -1227,16 +1227,16 @@ def add_channel_cmd(message):
     try:
         ch = message.text.split()[1]
         if not ch.startswith("@"):
-            bot.send_message(message.chat.id, "❌ آیدی کانال باید با @ شروع شود")
+            bot.send_message(message.chat.id, " آیدی کانال باید با @ شروع شود")
             return
 
         if ch not in CHANNELS:
             CHANNELS.append(ch)
-            bot.send_message(message.chat.id, f"✅ کانال {ch} اضافه شد")
+            bot.send_message(message.chat.id, f" کانال {ch} اضافه شد")
         else:
-            bot.send_message(message.chat.id, "⚠️ این کانال قبلاً اضافه شده")
+            bot.send_message(message.chat.id, " این کانال قبلاً اضافه شده")
     except:
-        bot.send_message(message.chat.id, "❌ مثال:\n/addchannel @channel")
+        bot.send_message(message.chat.id, " مثال:\n/addchannel @channel")
 @bot.message_handler(commands=["delchannel"])
 def del_channel_cmd(message):
     if not is_admin(message.from_user.id):
@@ -1246,21 +1246,21 @@ def del_channel_cmd(message):
         ch = message.text.split()[1]
         if ch in CHANNELS:
             CHANNELS.remove(ch)
-            bot.send_message(message.chat.id, f"🗑 کانال {ch} حذف شد")
+            bot.send_message(message.chat.id, f" کانال {ch} حذف شد")
         else:
-            bot.send_message(message.chat.id, "❌ کانال پیدا نشد")
+            bot.send_message(message.chat.id, " کانال پیدا نشد")
     except:
-        bot.send_message(message.chat.id, "❌ مثال:\n/delchannel @channel")
+        bot.send_message(message.chat.id, " مثال:\n/delchannel @channel")
 @bot.message_handler(commands=["channels"])
 def list_channels_cmd(message):
     if not is_admin(message.from_user.id):
         return
 
     if not CHANNELS:
-        bot.send_message(message.chat.id, "📡 کانالی ثبت نشده")
+        bot.send_message(message.chat.id, " کانالی ثبت نشده")
         return
 
-    text = "📡 کانال‌های اجباری:\n\n"
+    text = " کانال‌های اجباری:\n\n"
     for ch in CHANNELS:
         text += f"• {ch}\n"
 
@@ -1276,7 +1276,7 @@ def set_invite_points(message):
     if len(parts) != 2 or not parts[1].isdigit():
         bot.send_message(
             message.chat.id,
-            "❌ فرمت صحیح:\n/invite_points 5"
+            " فرمت صحیح:\n/invite_points 5"
         )
         return
 
@@ -1290,7 +1290,7 @@ def set_invite_points(message):
 
     bot.send_message(
         message.chat.id,
-        f"✅ امتیاز دعوت تنظیم شد روی: {value} امتیاز"
+        f" امتیاز دعوت تنظیم شد روی: {value} امتیاز"
     )
     
 
@@ -1304,11 +1304,11 @@ def add_admin_cmd(message):
         uid = int(message.text.split()[1])
         if uid not in ADMINS:
             ADMINS.append(uid)
-            bot.send_message(message.chat.id, f"✅ ادمین اضافه شد\n🆔 {uid}")
+            bot.send_message(message.chat.id, f" ادمین اضافه شد\n {uid}")
         else:
-            bot.send_message(message.chat.id, "⚠️ این کاربر از قبل ادمین است")
+            bot.send_message(message.chat.id, " این کاربر از قبل ادمین است")
     except:
-        bot.send_message(message.chat.id, "❌ مثال صحیح:\n/addadmin 123456789")
+        bot.send_message(message.chat.id, " مثال صحیح:\n/addadmin 123456789")
 @bot.message_handler(commands=["deladmin"])
 def del_admin_cmd(message):
     if message.from_user.id != OWNER_ID:
@@ -1318,22 +1318,22 @@ def del_admin_cmd(message):
         uid = int(message.text.split()[1])
         if uid in ADMINS:
             ADMINS.remove(uid)
-            bot.send_message(message.chat.id, f"🗑 ادمین حذف شد\n🆔 {uid}")
+            bot.send_message(message.chat.id, f" ادمین حذف شد\n {uid}")
         else:
-            bot.send_message(message.chat.id, "❌ این کاربر ادمین نیست")
+            bot.send_message(message.chat.id, " این کاربر ادمین نیست")
     except:
-        bot.send_message(message.chat.id, "❌ مثال صحیح:\n/deladmin 123456789")
+        bot.send_message(message.chat.id, " مثال صحیح:\n/deladmin 123456789")
 #===== پیام همگانی ====
 
 @bot.message_handler(commands=['broadcast'])
 def start_broadcast(message):
     if not is_admin(message.from_user.id):
-        bot.reply_to(message, "⛔ این دستور فقط برای ادمین است")
+        bot.reply_to(message, " این دستور فقط برای ادمین است")
         return
 
     bot.send_message(
         message.chat.id,
-        "📢 پیام همگانی\n\n"
+        " پیام همگانی\n\n"
         "پیام / عکس / ویدیو / لینک رو بفرست"
     )
     broadcast_data[message.chat.id] = {}
@@ -1349,13 +1349,13 @@ def get_broadcast_content(message):
 
     markup = InlineKeyboardMarkup()
     markup.add(
-        InlineKeyboardButton("✅ ارسال", callback_data="confirm_broadcast"),
-        InlineKeyboardButton("❌ لغو", callback_data="cancel_broadcast")
+        InlineKeyboardButton(" ارسال", callback_data="confirm_broadcast"),
+        InlineKeyboardButton(" لغو", callback_data="cancel_broadcast")
     )
 
     bot.send_message(
         message.chat.id,
-        "⚠️ پیش‌نمایش پیام\nارسال شود؟",
+        " پیش‌نمایش پیام\nارسال شود؟",
         reply_markup=markup
     )
 @bot.callback_query_handler(func=lambda c: c.data in ['confirm_broadcast', 'cancel_broadcast'])
@@ -1366,7 +1366,7 @@ def broadcast_confirm(call):
     if call.data == 'cancel_broadcast':
         broadcast_data.pop(call.message.chat.id, None)
         bot.edit_message_text(
-            "❌ لغو شد",
+            " لغو شد",
             call.message.chat.id,
             call.message.message_id
         )
@@ -1389,7 +1389,7 @@ def broadcast_confirm(call):
             pass
 
     bot.edit_message_text(
-        f"✅ پیام همگانی ارسال شد\n📨 ارسال‌شده: {sent}",
+        f" پیام همگانی ارسال شد\n ارسال‌شده: {sent}",
         call.message.chat.id,
         call.message.message_id
     )
@@ -1414,14 +1414,14 @@ def top_invites(message):
         bot.send_message(message.chat.id, "❌ داده‌ای وجود ندارد")
         return
 
-    text = "🏆 برترین دعوت‌کنندگان:\n\n"
+    text = " برترین دعوت‌کنندگان:\n\n"
     kb = InlineKeyboardMarkup()
 
     for i, (uid, count) in enumerate(rows, start=1):
-        text += f"{i}. 👤 {uid} | 👥 {count} دعوت\n"
+        text += f"{i}.  {uid} |  {count} دعوت\n"
         kb.add(
             InlineKeyboardButton(
-                f"🎁 پاداش به {i}",
+                f" پاداش به {i}",
                 callback_data=f"reward_invite_{uid}"
             )
         )
@@ -1437,7 +1437,7 @@ def reward_invite_user(c):
 
     bot.send_message(
         c.from_user.id,
-        f"🎁 مقدار امتیاز برای کاربر {uid} را ارسال کن:"
+        f" مقدار امتیاز برای کاربر {uid} را ارسال کن:"
     )
 @bot.message_handler(func=lambda m: m.from_user.id in admin_steps)
 def apply_reward(message):
@@ -1449,7 +1449,7 @@ def apply_reward(message):
         if amount <= 0:
             raise ValueError
     except:
-        bot.send_message(message.chat.id, "❌ فقط عدد صحیح مثبت بفرست")
+        bot.send_message(message.chat.id, " فقط عدد صحیح مثبت بفرست")
         return
 
     action, uid = admin_steps.pop(message.from_user.id)
@@ -1463,13 +1463,13 @@ def apply_reward(message):
 
         bot.send_message(
             message.chat.id,
-            f"✅ {amount} امتیاز به کاربر {uid} داده شد"
+            f" {amount} امتیاز به کاربر {uid} داده شد"
         )
 
         try:
             bot.send_message(
                 uid,
-                f"🎉 تبریک!\n🏆 به‌عنوان برترین دعوت‌کننده، {amount} امتیاز گرفتی"
+                f" تبریک!\n به‌عنوان برترین دعوت‌کننده، {amount} امتیاز گرفتی"
             )
         except:
             pass
@@ -1487,7 +1487,7 @@ def add_task(message):
     """)
     db.commit()
 
-    bot.send_message(message.chat.id, "✅ تسک نمونه اضافه شد")
+    bot.send_message(message.chat.id, " تسک نمونه اضافه شد")
     
 @bot.message_handler(commands=["tasks"])
 def admin_tasks(message):
@@ -1500,17 +1500,17 @@ def admin_tasks(message):
     rows = cur.fetchall()
 
     if not rows:
-        bot.send_message(message.chat.id, "❌ تسکی وجود ندارد")
+        bot.send_message(message.chat.id, " تسکی وجود ندارد")
         return
 
     text = "📋 لیست تسک‌ها:\n\n"
     for t in rows:
-        status = "✅ فعال" if t[3] else "⛔ غیرفعال"
+        status = " فعال" if t[3] else " غیرفعال"
         text += f"""
-🧩 ID: {t[0]}
-📌 {t[1]}
-🎁 {t[2]} امتیاز
-📍 وضعیت: {status}
+ ID: {t[0]}
+ {t[1]}
+ {t[2]} امتیاز
+  وضعیت: {status}
 ────────────
 """
     bot.send_message(message.chat.id, text)
@@ -1534,7 +1534,7 @@ def edit_task_menu(message):
 
     bot.send_message(
         message.chat.id,
-        "✏️ انتخاب تسک برای ویرایش:",
+        " انتخاب تسک برای ویرایش:",
         reply_markup=kb
     )
 edit_state = {}
@@ -1546,20 +1546,20 @@ def edit_task_options(call):
 
     kb = InlineKeyboardMarkup()
     kb.add(
-        InlineKeyboardButton("✏️ تغییر عنوان", callback_data="edit_title"),
-        InlineKeyboardButton("📝 تغییر توضیح", callback_data="edit_desc")
+        InlineKeyboardButton(" تغییر عنوان", callback_data="edit_title"),
+        InlineKeyboardButton(" تغییر توضیح", callback_data="edit_desc")
     )
     kb.add(
-        InlineKeyboardButton("🔗 تغییر لینک", callback_data="edit_link"),
-        InlineKeyboardButton("🎁 تغییر جایزه", callback_data="edit_reward")
+        InlineKeyboardButton(" تغییر لینک", callback_data="edit_link"),
+        InlineKeyboardButton(" تغییر جایزه", callback_data="edit_reward")
     )
     kb.add(
-        InlineKeyboardButton("🔄 فعال / غیرفعال", callback_data="edit_toggle")
+        InlineKeyboardButton(" فعال / غیرفعال", callback_data="edit_toggle")
     )
 
     bot.send_message(
         call.message.chat.id,
-        "⚙️ چه چیزی ویرایش شود؟",
+        " چه چیزی ویرایش شود؟",
         reply_markup=kb
     )
 @bot.callback_query_handler(func=lambda c: c.data.startswith("edit_"))
@@ -1573,7 +1573,7 @@ def set_edit_field(call):
 
     bot.send_message(
         call.message.chat.id,
-        "✍️ مقدار جدید را ارسال کن"
+        " مقدار جدید را ارسال کن"
     )
 @bot.message_handler(func=lambda m: m.from_user.id in edit_state)
 def save_edit(message):
@@ -1595,7 +1595,7 @@ def save_edit(message):
 
     elif field == "reward":
         if not value.isdigit():
-            bot.send_message(message.chat.id, "❌ فقط عدد")
+            bot.send_message(message.chat.id, " فقط عدد")
             return
         cur.execute("UPDATE tasks SET reward=? WHERE id=?", (int(value), task_id))
 
@@ -1609,7 +1609,7 @@ def save_edit(message):
     db.commit()
     edit_state.pop(uid)
 
-    bot.send_message(message.chat.id, "✅ تغییرات ذخیره شد")
+    bot.send_message(message.chat.id, " تغییرات ذخیره شد")
 #====== انتقالات گروه ======
 @bot.message_handler(func=lambda m: m.chat.id == TRANSFER_GROUP_ID and m.reply_to_message)
 def transfer_by_reply(message):
@@ -1624,7 +1624,7 @@ def transfer_by_reply(message):
 
     parts = text.split()
     if len(parts) != 2:
-        bot.reply_to(message, "❌ فرمت درست:\nانتقال 15")
+        bot.reply_to(message, " فرمت درست:\nانتقال 15")
         return
 
     try:
@@ -1632,21 +1632,21 @@ def transfer_by_reply(message):
         if amount <= 0:
             raise ValueError
     except:
-        bot.reply_to(message, "❌ مقدار انتقال نامعتبره")
+        bot.reply_to(message, " مقدار انتقال نامعتبره")
         return
 
     sender_id = message.from_user.id
     receiver_id = message.reply_to_message.from_user.id
 
     if sender_id == receiver_id:
-        bot.reply_to(message, "❌ نمی‌تونی به خودت انتقال بدی")
+        bot.reply_to(message, " نمی‌تونی به خودت انتقال بدی")
         return
 
     # موجودی فرستنده
     cur.execute("SELECT points FROM users WHERE user_id=?", (sender_id,))
     row = cur.fetchone()
     if not row or row[0] < amount:
-        bot.reply_to(message, "❌ امتیاز کافی نداری")
+        bot.reply_to(message, " امتیاز کافی نداری")
         return
 
     # انجام انتقال
@@ -1659,18 +1659,18 @@ def transfer_by_reply(message):
 
     # نوتیف خصوصی
     try:
-        bot.send_message(sender_id, f"➖ {amount} امتیاز به {receiver_tag} منتقل شد")
-        bot.send_message(receiver_id, f"➕ {amount} امتیاز از {sender_tag} دریافت کردی")
+        bot.send_message(sender_id, f" {amount} امتیاز به {receiver_tag} منتقل شد")
+        bot.send_message(receiver_id, f" {amount} امتیاز از {sender_tag} دریافت کردی")
     except:
         pass
 
     # لاگ داخل گروه
     bot.reply_to(
         message,
-        f"🔄 انتقال انجام شد\n"
-        f"👤 فرستنده: {sender_tag}\n"
-        f"👥 گیرنده: {receiver_tag}\n"
-        f"⭐ مقدار: {amount}"
+        f" انتقال انجام شد\n"
+        f" فرستنده: {sender_tag}\n"
+        f" گیرنده: {receiver_tag}\n"
+        f" مقدار: {amount}"
     )
 
 #===== انتقال امتیاز در گروه =====
@@ -1694,7 +1694,7 @@ def group_transfer(message):
     receiver = receiver_user.id
 
     if sender == receiver:
-        bot.reply_to(message, "❌ نمی‌تونی به خودت امتیاز انتقال بدی")
+        bot.reply_to(message, " نمی‌تونی به خودت امتیاز انتقال بدی")
         return
 
     cur.execute(
@@ -1710,38 +1710,38 @@ def group_transfer(message):
     r = cur.fetchone()
 
     if not s or not r:
-        bot.reply_to(message, "❌ هر دو کاربر باید ربات را استارت کرده باشند")
+        bot.reply_to(message, " هر دو کاربر باید ربات را استارت کرده باشند")
         return
 
     points, last_transfer = s
     now = int(time.time())
 
-    # ⏳ ضد اسپم
+    #  ضد اسپم
     if now - last_transfer < TRANSFER_COOLDOWN:
         bot.reply_to(
             message,
-            f"⏳ لطفاً {TRANSFER_COOLDOWN} ثانیه بین انتقال‌ها صبر کن"
+            f" لطفاً {TRANSFER_COOLDOWN} ثانیه بین انتقال‌ها صبر کن"
         )
         return
 
     parts = message.text.split()
     if len(parts) != 2 or not parts[1].isdigit():
-        bot.reply_to(message, "❌ فرمت صحیح:\nانتقال 5")
+        bot.reply_to(message, " فرمت صحیح:\nانتقال 5")
         return
 
     amount = int(parts[1])
     if amount <= 0:
-        bot.reply_to(message, "❌ مقدار نامعتبره")
+        bot.reply_to(message, " مقدار نامعتبره")
         return
 
     if points < amount:
         bot.reply_to(
             message,
-            f"❌ امتیاز کافی نیست\n⭐ امتیاز شما: {points}"
+            f" امتیاز کافی نیست\n امتیاز شما: {points}"
         )
         return
 
-    # ✅ انجام انتقال امتیاز
+    #  انجام انتقال امتیاز
     cur.execute(
         """
         UPDATE users
@@ -1776,7 +1776,7 @@ def group_transfer(message):
     try:
         bot.send_message(
             sender,
-            f"✅ {amount} امتیاز به {user_tag(receiver_user)} انتقال دادی"
+            f" {amount} امتیاز به {user_tag(receiver_user)} انتقال دادی"
         )
     except:
         pass
@@ -1784,7 +1784,7 @@ def group_transfer(message):
     try:
         bot.send_message(
             receiver,
-            f"🎉 {amount} امتیاز از {user_tag(sender_user)} دریافت کردی"
+            f" {amount} امتیاز از {user_tag(sender_user)} دریافت کردی"
         )
     except:
         pass
@@ -1810,7 +1810,7 @@ def group_transfer_username(message):
     if len(parts) != 3 or not parts[1].isdigit():
         bot.reply_to(
             message,
-            "❌ فرمت صحیح:\nانتقال 5 @username"
+            " فرمت صحیح:\nانتقال 5 @username"
         )
         return
 
@@ -1818,7 +1818,7 @@ def group_transfer_username(message):
     username = parts[2].replace("@", "").lower()
 
     if amount <= 0:
-        bot.reply_to(message, "❌ مقدار نامعتبره")
+        bot.reply_to(message, " مقدار نامعتبره")
         return
 
     # گرفتن اطلاعات فرستنده
@@ -1829,7 +1829,7 @@ def group_transfer_username(message):
     s = cur.fetchone()
 
     if not s:
-        bot.reply_to(message, "❌ اول ربات رو استارت کن")
+        bot.reply_to(message, " اول ربات رو استارت کن")
         return
 
     points, last_transfer = s
@@ -1838,14 +1838,14 @@ def group_transfer_username(message):
     if points < amount:
         bot.reply_to(
             message,
-            f"❌ امتیاز کافی نیست\n⭐ امتیاز شما: {points}"
+            f" امتیاز کافی نیست\n امتیاز شما: {points}"
         )
         return
 
     if now - last_transfer < TRANSFER_COOLDOWN:
         bot.reply_to(
             message,
-            f"⏳ لطفاً {TRANSFER_COOLDOWN} ثانیه صبر کن"
+            f" لطفاً {TRANSFER_COOLDOWN} ثانیه صبر کن"
         )
         return
 
@@ -1856,13 +1856,13 @@ def group_transfer_username(message):
             username
         ).user
     except:
-        bot.reply_to(message, "❌ کاربر پیدا نشد")
+        bot.reply_to(message, " کاربر پیدا نشد")
         return
 
     receiver = receiver_user.id
 
     if sender == receiver:
-        bot.reply_to(message, "❌ نمی‌تونی به خودت انتقال بدی")
+        bot.reply_to(message, " نمی‌تونی به خودت انتقال بدی")
         return
 
     # گیرنده باید استارت کرده باشد
@@ -1873,11 +1873,11 @@ def group_transfer_username(message):
     if not cur.fetchone():
         bot.reply_to(
             message,
-            "❌ این کاربر هنوز ربات رو استارت نکرده"
+            " این کاربر هنوز ربات رو استارت نکرده"
         )
         return
 
-    # ✅ انجام انتقال
+    #  انجام انتقال
     cur.execute(
         """
         UPDATE users
@@ -1896,7 +1896,7 @@ def group_transfer_username(message):
     bot.send_message(
         message.chat.id,
         f"""
-✅ انتقال موفق
+ انتقال موفق
 
 مقدار: {amount} امتیاز
 از: {user_tag(sender_user)}
@@ -1908,7 +1908,7 @@ def group_transfer_username(message):
     try:
         bot.send_message(
             sender,
-            f"✅ {amount} امتیاز به {user_tag(receiver_user)} دادی"
+            f" {amount} امتیاز به {user_tag(receiver_user)} دادی"
         )
     except:
         pass
@@ -1916,7 +1916,7 @@ def group_transfer_username(message):
     try:
         bot.send_message(
             receiver,
-            f"🎉 {amount} امتیاز از {user_tag(sender_user)} گرفتی"
+            f" {amount} امتیاز از {user_tag(sender_user)} گرفتی"
         )
     except:
         pass    
