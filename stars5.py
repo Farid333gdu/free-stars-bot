@@ -126,22 +126,6 @@ ON task_requests(status)
 
 db.commit()
 
-cur.execute("SELECT points FROM users WHERE user_id=?", (uid,))
-row = cur.fetchone()
-
-if not row:
-    bot.send_message(message.chat.id, "کاربر یافت نشد")
-    return
-
-points = row[0]
-
-if points < 10:
-    bot.send_message(message.chat.id, "حداقل 10 امتیاز برای تبدیل نیاز است")
-    return
-
-stars = points // 10
-used_points = stars * 10
-
 # ================= کوئری عمومی امن =================
 def execute_query(query, params=()):
     conn = sqlite3.connect(DB_PATH)
@@ -288,7 +272,7 @@ convert_state = {}
 broadcast_data = {}
 USERS_PER_PAGE = 50
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
-
+balance REAL DEFAULT 0
 def back_menu():
     kb = ReplyKeyboardMarkup(resize_keyboard=True)
     kb.add(KeyboardButton(" برگشت"))
@@ -542,105 +526,42 @@ def help_handler(message):
         text,
         reply_markup=main_menu()
     )
-#===== تبدیل امتیاز به استارز ====
-@bot.message_handler(func=lambda m: m.text == "تبدیل امتیاز به استارز")
-def start_convert(message):
+
+# ===== تبدیل امتیاز به استارز =====
+@bot.message_handler(func=lambda m: m.text == "تبدیل امتیاز")
+def convert_points(message):
     uid = message.from_user.id
 
-    cur.execute(
-        "SELECT points FROM users WHERE user_id=?",
-        (uid,)
-    )
+    cur.execute("SELECT points, balance FROM users WHERE user_id=?", (uid,))
     row = cur.fetchone()
 
-    if not row or row[0] < 10:
-        bot.send_message(
-            message.chat.id,
-            "حداقل 10 امتیاز برای تبدیل لازم است",
-            reply_markup=main_menu()
-        )
+    if not row:
+        bot.send_message(message.chat.id, "کاربر یافت نشد")
         return
 
-    convert_state[uid] = True
+    points, balance = row
 
-    kb = InlineKeyboardMarkup()
-    kb.add(InlineKeyboardButton(" لغو", callback_data="cancel_convert"))
-
-    bot.send_message(
-        message.chat.id,
-        f"""
- تبدیل امتیاز به استارز
-
- امتیاز شما: {row[0]}
-
-عدد مورد نظر را ارسال کن:
-مثال: 10 / 20 / 30
-(فقط مضرب 10)
-""",
-        reply_markup=kb
-    )
-@bot.message_handler(func=lambda m: m.from_user.id in convert_state and m.text.isdigit())
-def do_convert(message):
-    uid = message.from_user.id
-    amount = int(message.text)
-
-    cur.execute(
-        "SELECT points FROM users WHERE user_id=?",
-        (uid,)
-    )
-    points = cur.fetchone()[0]
-
-    # قوانین
-    if amount < 10:
-        bot.send_message(message.chat.id, "حداقل مقدار 10 است")
+    if points < 10:
+        bot.send_message(message.chat.id, "حداقل 10 امتیاز برای تبدیل نیاز است")
         return
 
-    if amount % 10 != 0:
-        bot.send_message(message.chat.id, "فقط مضرب 10 مجاز است")
-        return
+    stars = points // 10
+    used_points = stars * 10
 
-    if amount > points:
-        bot.send_message(message.chat.id, "امتیاز کافی نیست")
-        return
-
-    stars = amount // 10
-
-    cur.execute(
-        """
-        UPDATE users
-        SET points = points - ?,
+    cur.execute("""
+        UPDATE users 
+        SET points = points - ?, 
             balance = balance + ?
-        WHERE user_id=?
-        """,
-        (amount, stars, uid)
-    )
+        WHERE user_id = ?
+    """, (used_points, stars, uid))
+
     db.commit()
 
-    convert_state.pop(uid, None)
-
     bot.send_message(
         message.chat.id,
-        f"""
- تبدیل با موفقیت انجام شد
-
- امتیاز کم شده: {amount}
- استارز اضافه شده: {stars}
-""",
-        reply_markup=main_menu()
-    )
-@bot.callback_query_handler(func=lambda c: c.data == "cancel_convert")
-def cancel_convert(call):
-    convert_state.pop(call.from_user.id, None)
-
-    bot.edit_message_text(
-        "عملیات تبدیل لغو شد",
-        call.message.chat.id,
-        call.message.message_id
-    )
-
-    bot.send_message(
-        call.message.chat.id,
-        "منوی اصلی",
+        f"✅ تبدیل انجام شد\n\n"
+        f"⭐ استارز دریافت شده: {stars}\n"
+        f"🔹 امتیاز مصرف شده: {used_points}",
         reply_markup=main_menu()
     )
     
