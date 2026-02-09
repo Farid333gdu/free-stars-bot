@@ -1511,8 +1511,7 @@ def admin_tasks(message):
  {t[1]}
  {t[2]} امتیاز
   وضعیت: {status}
-────────────
-"""
+  
     bot.send_message(message.chat.id, text)
     
 @bot.message_handler(commands=["edittask"])
