@@ -49,9 +49,11 @@ Thread(target=run_web, daemon=True).start()
 bot = TeleBot(TOKEN, parse_mode="HTML")
 
 # ================== دیتابیس ==================
-
-
 # ================== توابع کمکی ==================
+import os
+import sqlite3
+import re
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "bot.db")
 
@@ -64,6 +66,7 @@ CREATE TABLE IF NOT EXISTS users (
     user_id INTEGER PRIMARY KEY,
     balance REAL DEFAULT 0,
     points INTEGER DEFAULT 0,
+    score INTEGER DEFAULT 0,
     join_date TEXT,
     last_active TEXT,
     invite_count INTEGER DEFAULT 0,
@@ -101,6 +104,30 @@ CREATE TABLE IF NOT EXISTS tasks (
     active INTEGER DEFAULT 1
 )
 """)
+
+# ================= TASK REQUESTS (SHOTS) =================
+cur.execute("""
+CREATE TABLE IF NOT EXISTS task_requests (
+    user_id INTEGER,
+    task_id INTEGER,
+    photo_id TEXT,
+    status TEXT DEFAULT 'pending',
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, task_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (task_id) REFERENCES tasks(id)
+)
+""")
+
+cur.execute("""
+CREATE INDEX IF NOT EXISTS idx_task_requests_status
+ON task_requests(status)
+""")
+
+db.commit()
+
+
+# ================= کوئری کاربران برتر دعوت =================
 cur.execute("""
 SELECT user_id, invite_count
 FROM users
@@ -109,27 +136,22 @@ LIMIT 10
 """)
 top_users = cur.fetchall()
 
-# ================= TASK REQUESTS (SHOTS) =================
-cur.execute("""
-CREATE TABLE IF NOT EXISTS task_requests (
-    user_id INTEGER,
-    task_id INTEGER,
-    photo_id TEXT,
-    status TEXT DEFAULT 'pending', -- pending / approved / rejected
-    created_at TEXT,
-    PRIMARY KEY (user_id, task_id)
-)
-""")
-cur.execute("""
-UPDATE users
-SET invite_count = invite_count + 1
-WHERE user_id = ?
-""", (inviter_id,))
-db.commit()
 
-db.commit()
+# ================= افزایش تعداد دعوت =================
+def increase_invite(inviter_id):
+    cur.execute("""
+    UPDATE users
+    SET invite_count = invite_count + 1
+    WHERE user_id = ?
+    """, (inviter_id,))
+    db.commit()
+
+
+# ================= توابع مدیریتی =================
+
 def is_admin(uid):
     return uid == OWNER_ID or uid in ADMINS
+
 
 def admin_only(message, *, allow_when_off=True, private_only=False):
     uid = message.from_user.id
@@ -147,8 +169,10 @@ def admin_only(message, *, allow_when_off=True, private_only=False):
 
     return True
 
+
 def user_tag(user):
     return f"@{user.username}" if user.username else user.first_name
+
 
 def remove_emojis(text):
     emoji_pattern = re.compile(
@@ -157,6 +181,9 @@ def remove_emojis(text):
     )
     return emoji_pattern.sub("", text)
 
+
+# ================= توابع دیتابیس =================
+
 def get_all_users():
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
@@ -164,27 +191,28 @@ def get_all_users():
     users = [i[0] for i in c.fetchall()]
     conn.close()
     return users
+
+
 def get_users(limit, offset):
-    conn = sqlite3.connect("data.db")
+    conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT user_id, username, score
+        SELECT user_id, points, invite_count
         FROM users
-        ORDER BY score DESC
+        ORDER BY points DESC
         LIMIT ? OFFSET ?
     """, (limit, offset))
 
     users = cur.fetchall()
     conn.close()
     return users
-    
-def init_db():
-    conn = sqlite3.connect("data.db")
-    cursor = conn.cursor()
 
-    def init_db():
-    conn = sqlite3.connect("data.db", check_same_thread=False)
+
+# ================= init_db نهایی =================
+
+def init_db():
+    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
     cur = conn.cursor()
 
     cur.execute("""
@@ -193,8 +221,6 @@ def init_db():
         score INTEGER DEFAULT 0
     )
     """)
-
-    conn.commit()
 
     cur.execute("""
     CREATE TABLE IF NOT EXISTS task_requests (
@@ -216,7 +242,6 @@ def init_db():
 
     conn.commit()
     conn.close()
-    
 # ================== متغیرهای حالت ==================
 init_db()
 transfer_state = {}
