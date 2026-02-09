@@ -256,7 +256,7 @@ WHERE invite_count > 0
 def main_menu():
     kb = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
     kb.add("حساب کاربری")
-    kb.add(" برداشت استارز"٫"دعوت دوستان")
+    kb.add("برداشت استارز", "دعوت دوستان")
     kb.add(" تبدیل امتیاز به استارز")
     kb.add(" راهنما", " پشتیبانی")
     kb.add(" تسک‌ها")
