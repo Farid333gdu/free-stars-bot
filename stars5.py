@@ -138,11 +138,11 @@ def admin_only(message, *, allow_when_off=True, private_only=False):
         return False
 
     if private_only and message.chat.type != "private":
-        bot.send_message(message.chat.id, "❌ این دستور فقط در پیوی قابل اجراست")
+        bot.send_message(message.chat.id, "این دستور فقط در پیوی قابل اجراست")
         return False
 
     if not BOT_ACTIVE and not allow_when_off:
-        bot.send_message(message.chat.id, "⛔ ربات خاموش است")
+        bot.send_message(message.chat.id, "ربات خاموش است")
         return False
 
     return True
@@ -223,7 +223,7 @@ WHERE invite_count > 0
 
 def main_menu():
     kb = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
-    kb.add("👤 حساب کاربری")
+    kb.add("🆔حساب کاربری")
     kb.add("⭐ برداشت استارز", "🎁 دعوت دوستان")
     kb.add("🔄 تبدیل امتیاز به استارز")
     kb.add("📘 راهنما", "📞 پشتیبانی")
@@ -247,11 +247,11 @@ def join_keyboard():
     for ch in CHANNELS:
         kb.add(
             InlineKeyboardButton(
-                "📢 عضویت در کانال",
+                "عضویت در کانال",
                 url=f"https://t.me/{ch.replace('@','')}"
             )
         )
-    kb.add(InlineKeyboardButton("✅ بررسی عضویت", callback_data="check_join"))
+    kb.add(InlineKeyboardButton("بررسی عضویت", callback_data="check_join"))
     return kb
 
 @bot.callback_query_handler(func=lambda c: c.data == "check_join")
@@ -260,17 +260,17 @@ def recheck_join(c):
 
     if check_channels(uid):
         bot.edit_message_text(
-            "✅ عضویت تایید شد",
+            "عضویت تایید شد",
             c.message.chat.id,
             c.message.message_id
         )
         bot.send_message(
             c.message.chat.id,
-            "🌟 خوش آمدی",
+            "خوش آمدی",
             reply_markup=main_menu()
         )
     else:
-        bot.answer_callback_query(c.id, "❌ هنوز عضو کانال نیستی", show_alert=True)
+        bot.answer_callback_query(c.id, "هنوز عضو کانال نیستی", show_alert=True)
 
 # ================= کپچا =================
 
@@ -290,7 +290,7 @@ def check_captcha(message):
     uid = message.from_user.id
 
     if message.text != captcha.get(uid):
-        bot.send_message(message.chat.id, "❌ کد اشتباه است")
+        bot.send_message(message.chat.id, "کد اشتباه است")
         return
 
     captcha.pop(uid)
@@ -346,7 +346,7 @@ def check_captcha(message):
 
     bot.send_message(
         message.chat.id,
-        "✅ ورود موفق",
+        "ورود موفق",
         reply_markup=main_menu()
     )
 
@@ -407,7 +407,7 @@ def start(message):
     )
     
 #==== پروفایل ===
-@bot.message_handler(func=lambda m: m.text == "👤 حساب کاربری")
+@bot.message_handler(func=lambda m: m.text == "حساب کاربری")
 def profile(message):
     uid = message.from_user.id
 
@@ -439,11 +439,11 @@ def profile(message):
     )
     
 #==== راهنما ======  
-@bot.message_handler(func=lambda m: m.text == "📘 راهنما")
+@bot.message_handler(func=lambda m: m.text == "راهنما")
 def help_handler(message):
     text = (
         "راهنمای استفاده از ربات\n\n"
-        "خوش آمدی 👋\n"
+        "خوش آمدی‌\n"
         "با این ربات می‌تونی امتیاز جمع کنی و به استارز تبدیلش کنی.\n\n"
 
         "مراحل شروع:\n"
@@ -482,7 +482,7 @@ def start_convert(message):
     if not row or row[0] < 10:
         bot.send_message(
             message.chat.id,
-            "❌ حداقل ۱۰ امتیاز برای تبدیل لازم است",
+            "حداقل ۱۰ امتیاز برای تبدیل لازم است",
             reply_markup=main_menu()
         )
         return
@@ -497,7 +497,7 @@ def start_convert(message):
         f"""
  تبدیل امتیاز به استارز
 
-⭐ امتیاز شما: {row[0]}
+ امتیاز شما: {row[0]}
 
 عدد مورد نظر را ارسال کن:
 مثال: 10 / 20 / 30
@@ -518,15 +518,15 @@ def do_convert(message):
 
     # قوانین
     if amount < 10:
-        bot.send_message(message.chat.id, "❌ حداقل مقدار ۱۰ است")
+        bot.send_message(message.chat.id, "حداقل مقدار ۱۰ است")
         return
 
     if amount % 10 != 0:
-        bot.send_message(message.chat.id, "❌ فقط مضرب ۱۰ مجاز است")
+        bot.send_message(message.chat.id, "فقط مضرب ۱۰ مجاز است")
         return
 
     if amount > points:
-        bot.send_message(message.chat.id, "❌ امتیاز کافی نیست")
+        bot.send_message(message.chat.id, "امتیاز کافی نیست")
         return
 
     stars = amount // 10
@@ -547,10 +547,10 @@ def do_convert(message):
     bot.send_message(
         message.chat.id,
         f"""
-✅ تبدیل با موفقیت انجام شد
+ تبدیل با موفقیت انجام شد
 
-➖ امتیاز کم شده: {amount}
-➕ استارز اضافه شده: {stars}
+ امتیاز کم شده: {amount}
+ استارز اضافه شده: {stars}
 """,
         reply_markup=main_menu()
     )
@@ -559,39 +559,39 @@ def cancel_convert(call):
     convert_state.pop(call.from_user.id, None)
 
     bot.edit_message_text(
-        "❌ عملیات تبدیل لغو شد",
+        "عملیات تبدیل لغو شد",
         call.message.chat.id,
         call.message.message_id
     )
 
     bot.send_message(
         call.message.chat.id,
-        "🔘 منوی اصلی",
+        "منوی اصلی",
         reply_markup=main_menu()
     )
     
 #==== تسک =====
-@bot.message_handler(func=lambda m: m.text == "🧩 تسک‌ها")
+@bot.message_handler(func=lambda m: m.text == "تسک‌ها")
 def show_tasks(message):
     cur.execute("SELECT id, title, reward FROM tasks WHERE active=1")
     rows = cur.fetchall()
 
     if not rows:
-        bot.send_message(message.chat.id, "❌ تسکی وجود ندارد")
+        bot.send_message(message.chat.id, "تسکی وجود ندارد")
         return
 
     kb = InlineKeyboardMarkup()
     for t in rows:
         kb.add(
             InlineKeyboardButton(
-                f"{t[1]} | 🎁 {t[2]} امتیاز",
+                f"{t[1]} |  {t[2]} امتیاز",
                 callback_data=f"task_{t[0]}"
             )
         )
 
     bot.send_message(
         message.chat.id,
-        "📋 لیست تسک‌ها:",
+        " لیست تسک‌ها:",
         reply_markup=kb
     )
 @bot.callback_query_handler(func=lambda c: c.data.startswith("task_"))
@@ -599,7 +599,7 @@ def task_detail(call):
     uid = call.from_user.id
     task_id = int(call.data.split("_")[1])
 
-    # ❌ قبلاً انجام داده؟
+    #  قبلاً انجام داده؟
     cur.execute("""
     SELECT id FROM task_submits
     WHERE task_id=? AND user_id=? AND status='approved'
@@ -608,7 +608,7 @@ def task_detail(call):
     if cur.fetchone():
         bot.answer_callback_query(
             call.id,
-            "❌ این تسک رو قبلاً انجام دادی",
+            " این تسک رو قبلاً انجام دادی",
             show_alert=True
         )
         return
@@ -626,11 +626,11 @@ def task_detail(call):
 
     bot.send_message(
         call.message.chat.id,
-        f"🧩 {t[0]}\n\n"
-        f"📝 {t[1]}\n"
-        f"🔗 {t[2]}\n"
-        f"🎁 جایزه: {t[3]} امتیاز\n\n"
-        "📸 بعد از انجام، عکس بفرست"
+        f" {t[0]}\n\n"
+        f" {t[1]}\n"
+        f" {t[2]}\n"
+        f" جایزه: {t[3]} امتیاز\n\n"
+        " بعد از انجام، عکس بفرست"
     )
 @bot.message_handler(content_types=["photo"])
 def receive_task_photo(message):
@@ -652,24 +652,24 @@ def receive_task_photo(message):
 
     kb = InlineKeyboardMarkup()
     kb.add(
-        InlineKeyboardButton("✅ تایید", callback_data=f"task_ok_{submit_id}"),
-        InlineKeyboardButton("❌ رد", callback_data=f"task_no_{submit_id}")
+        InlineKeyboardButton(" تایید", callback_data=f"task_ok_{submit_id}"),
+        InlineKeyboardButton(" رد", callback_data=f"task_no_{submit_id}")
     )
 
     bot.send_photo(
         TASK_CHANNEL_ID,
         photo_id,
         caption=(
-            f"📥 درخواست تسک\n\n"
-            f"👤 کاربر: {uid}\n"
-            f"🧩 تسک ID: {task_id}"
+            f" درخواست تسک\n\n"
+            f" کاربر: {uid}\n"
+            f" تسک ID: {task_id}"
         ),
         reply_markup=kb
     )
 
     bot.send_message(
         message.chat.id,
-        "⏳ درخواستت ارسال شد، منتظر بررسی ادمین باش"
+        " درخواستت ارسال شد، منتظر بررسی ادمین باش"
     )
 @bot.callback_query_handler(func=lambda c: c.data.startswith("task_ok_"))
 def approve_task(call):
@@ -699,8 +699,8 @@ def approve_task(call):
     )
     db.commit()
 
-    bot.answer_callback_query(call.id, "✅ تایید شد")
-    bot.send_message(uid, f"🎉 تسکت تایید شد\n➕ {reward} امتیاز گرفتی")
+    bot.answer_callback_query(call.id, " تایید شد")
+    bot.send_message(uid, f" تسکت تایید شد\n➕ {reward} امتیاز گرفتی")
 @bot.callback_query_handler(func=lambda c: c.data.startswith("task_no_"))
 def reject_task(call):
     submit_id = int(call.data.split("_")[2])
@@ -722,15 +722,15 @@ def reject_task(call):
     )
     db.commit()
 
-    bot.answer_callback_query(call.id, "❌ رد شد")
-    bot.send_message(uid, "❌ تسکت رد شد")
+    bot.answer_callback_query(call.id, "رد شد")
+    bot.send_message(uid, "تسکت رد شد")
   # ================= پشتیبانی =================
-@bot.message_handler(func=lambda m: m.text == "📞 پشتیبانی")
+@bot.message_handler(func=lambda m: m.text == " پشتیبانی")
 def support(message):
-    bot.send_message(message.chat.id, f"📞 پشتیبانی:\n{SUPPORT_ID}")
+    bot.send_message(message.chat.id, f" پشتیبانی:\n{SUPPORT_ID}")
 
 #====برداشت====
-@bot.message_handler(func=lambda m: m.text == "⭐ برداشت استارز")
+@bot.message_handler(func=lambda m: m.text == "برداشت استارز")
 def withdraw_start(message):
     uid = message.from_user.id
     now = int(time.time())
@@ -742,7 +742,7 @@ def withdraw_start(message):
     row = cur.fetchone()
 
     if not row:
-        bot.send_message(message.chat.id, "❌ ابتدا /start را بزن")
+        bot.send_message(message.chat.id, " ابتدا /start را بزن")
         return
 
     balance, last_withdraw = row
@@ -750,7 +750,7 @@ def withdraw_start(message):
     if balance <= 0:
         bot.send_message(
             message.chat.id,
-            "❌ استارزی برای برداشت نداری",
+            " استارزی برای برداشت نداری",
             reply_markup=main_menu()
         )
         return
@@ -759,30 +759,30 @@ def withdraw_start(message):
         remain = WITHDRAW_COOLDOWN - (now - last_withdraw)
         bot.send_message(
             message.chat.id,
-            f"⏳ هر ۱ ساعت فقط یک برداشت مجاز است\n"
-            f"⏱ زمان باقی‌مانده: {remain // 60} دقیقه",
+            f" هر ۱ ساعت فقط یک برداشت مجاز است\n"
+            f" زمان باقی‌مانده: {remain // 60} دقیقه",
             reply_markup=main_menu()
         )
         return
 
     msg = bot.send_message(
         message.chat.id,
-        f"⭐ موجودی استارز شما: {balance}\n\n"
-        "📤 مقدار برداشت استارز را ارسال کن:",
+        f" موجودی استارز شما: {balance}\n\n"
+        " مقدار برداشت استارز را ارسال کن:",
         reply_markup=back_menu()
     )
     bot.register_next_step_handler(msg, withdraw_get_amount)
 def withdraw_get_amount(message):
     uid = message.from_user.id
 
-    if message.text == "🔙 برگشت":
+    if message.text == " برگشت":
         bot.send_message(message.chat.id, "لغو شد", reply_markup=main_menu())
         return
 
     if not message.text.isdigit() or int(message.text) <= 0:
         msg = bot.send_message(
             message.chat.id,
-            "❌ مقدار باید عدد صحیح باشد",
+            " مقدار باید عدد صحیح باشد",
             reply_markup=back_menu()
         )
         bot.register_next_step_handler(msg, withdraw_get_amount)
@@ -796,7 +796,7 @@ def withdraw_get_amount(message):
     if amount > balance:
         bot.send_message(
             message.chat.id,
-            "❌ استارز کافی نداری",
+            "استارز کافی نداری",
             reply_markup=main_menu()
         )
         return
@@ -813,10 +813,10 @@ def withdraw_get_link(message):
     uid = message.from_user.id
 
     if uid not in withdraw_requests:
-        bot.send_message(message.chat.id, "❌ خطا، دوباره تلاش کن", reply_markup=main_menu())
+        bot.send_message(message.chat.id, " خطا، دوباره تلاش کن", reply_markup=main_menu())
         return
 
-    if message.text == "🔙 برگشت":
+    if message.text == " برگشت":
         withdraw_requests.pop(uid, None)
         bot.send_message(message.chat.id, "لغو شد", reply_markup=main_menu())
         return
@@ -833,8 +833,8 @@ def withdraw_get_link(message):
 
     kb = InlineKeyboardMarkup()
     kb.add(
-        InlineKeyboardButton("✅ تأیید", callback_data=f"wd_ok_{uid}_{amount}"),
-        InlineKeyboardButton("❌ رد", callback_data=f"wd_no_{uid}_{amount}")
+        InlineKeyboardButton(" تأیید", callback_data=f"wd_ok_{uid}_{amount}"),
+        InlineKeyboardButton(" رد", callback_data=f"wd_no_{uid}_{amount}")
     )
 
     bot.send_message(
@@ -853,7 +853,7 @@ ID کاربر: {uid}
 
     bot.send_message(
         message.chat.id,
-        "✅ درخواست برداشت ثبت شد\n⏳ منتظر تأیید ادمین باشید",
+        " درخواست برداشت ثبت شد\n منتظر تأیید ادمین باشید",
         reply_markup=main_menu()
     )
 
@@ -861,7 +861,7 @@ ID کاربر: {uid}
 @bot.callback_query_handler(func=lambda c: c.data.startswith("wd_ok_"))
 def approve_withdraw(c):
     if not is_admin(c.from_user.id):
-        bot.answer_callback_query(c.id, "⛔ دسترسی نداری", show_alert=True)
+        bot.answer_callback_query(c.id, " دسترسی نداری", show_alert=True)
         return
 
     _, _, uid, amount = c.data.split("_")
@@ -873,7 +873,7 @@ def approve_withdraw(c):
 
     if balance < amount:
         bot.edit_message_text(
-            "❌ موجودی کاربر کافی نیست",
+            " موجودی کاربر کافی نیست",
             c.message.chat.id,
             c.message.message_id
         )
@@ -886,35 +886,35 @@ def approve_withdraw(c):
     db.commit()
 
     bot.edit_message_text(
-        "✅ برداشت استارز تأیید شد",
+        " برداشت استارز تأیید شد",
         c.message.chat.id,
         c.message.message_id
     )
 
     bot.send_message(
         uid,
-        f"🎉 برداشت استارز شما تأیید شد\n⭐ مقدار: {amount}"
+        f" برداشت استارز شما تأیید شد\n مقدار: {amount}"
     )
 @bot.callback_query_handler(func=lambda c: c.data.startswith("wd_no_"))
 def reject_withdraw(c):
     if not is_admin(c.from_user.id):
-        bot.answer_callback_query(c.id, "⛔ دسترسی نداری", show_alert=True)
+        bot.answer_callback_query(c.id, " دسترسی نداری", show_alert=True)
         return
 
     _, _, uid, amount = c.data.split("_")
 
     bot.edit_message_text(
-        "❌ برداشت استارز رد شد",
+        " برداشت استارز رد شد",
         c.message.chat.id,
         c.message.message_id
     )
 
     bot.send_message(
         int(uid),
-        f"❌ برداشت استارز شما رد شد\n⭐ مقدار: {amount}"
+        f" برداشت استارز شما رد شد\n مقدار: {amount}"
     )
 # ================= دعوت دوستان =================
-@bot.message_handler(func=lambda m: m.text == "🎁 دعوت دوستان")
+@bot.message_handler(func=lambda m: m.text == " دعوت دوستان")
 def invite_friends(message):
     uid = message.from_user.id
     link = f"https://t.me/{bot.get_me().username}?start={uid}"
@@ -938,11 +938,11 @@ def invite_friends(message):
 @bot.message_handler(commands=["setgroup"])
 def set_transfer_group(message):
     if not is_admin(message.from_user.id):
-        bot.reply_to(message, "⛔ دسترسی نداری")
+        bot.reply_to(message, " دسترسی نداری")
         return
 
     if message.chat.type not in ["group", "supergroup"]:
-        bot.reply_to(message, "❌ این دستور فقط داخل گروه اجرا می‌شود")
+        bot.reply_to(message, " این دستور فقط داخل گروه اجرا می‌شود")
         return
 
     group_id = message.chat.id
