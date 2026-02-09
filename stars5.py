@@ -272,7 +272,6 @@ convert_state = {}
 broadcast_data = {}
 USERS_PER_PAGE = 50
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
-balance REAL DEFAULT 0
 def back_menu():
     kb = ReplyKeyboardMarkup(resize_keyboard=True)
     kb.add(KeyboardButton(" برگشت"))
