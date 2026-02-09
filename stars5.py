@@ -242,6 +242,12 @@ def init_db():
 
     conn.commit()
     conn.close()
+    cur.execute("""
+SELECT user_id, invite_count
+FROM users
+WHERE invite_count > 0
+ORDER BY invite_count DESC
+""")
 # ================== متغیرهای حالت ==================
 init_db()
 transfer_state = {}
@@ -250,7 +256,6 @@ admin_steps = {}
 convert_state = {}
 broadcast_data = {}
 USERS_PER_PAGE = 50
-WHERE invite_count > 0
 # ================= منو =================
 
 def main_menu():
