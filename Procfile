@@ -1,2 +1,2 @@
-worker: python stars5.py
+worker: python bot5.py
 
