@@ -4,7 +4,7 @@ import sqlite3
 import random
 from PIL import Image, ImageDraw
 import time
-
+import os
 TOKEN = "8327002490:AAEAExmXciV-5ss9FQ9WDeu2h05oXsioXTA"
 WITHDRAW_CHANNEL_ID = -1003712489004
 FORCE_CHANNELS = ["@BNPREMIUMFREE", "@AxNetv", "@rfral_Azad", "@ZDGmail", "@BNBPREMIUMFREE"]
