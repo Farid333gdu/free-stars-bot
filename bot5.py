@@ -15,10 +15,14 @@ TOKEN = os.getenv("TOKEN")
 
 bot = telebot.TeleBot(TOKEN, threaded=False)
 
-db = sqlite3.connect("bot5130.db", check_same_thread=False)
+
 BOT_USERNAME = bot.get_me().username
 
 # ------------------- ایجاد جداول -------------------
+
+conn = sqlite3.connect("bot5130.db", check_same_thread=False)
+cursor = conn.cursor()
+
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS users (
     user_id INTEGER PRIMARY KEY,
@@ -32,7 +36,9 @@ CREATE TABLE IF NOT EXISTS users (
     withdraw_target TEXT DEFAULT ''
 )
 """)
-db.commit()
+
+conn.commit()
+conn.close()
 
 # اضافه کردن کاربران ویژه
 conn = sqlite3.connect("bot5130.db", check_same_thread=False)
