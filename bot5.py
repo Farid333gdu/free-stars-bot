@@ -11,13 +11,11 @@ FORCE_CHANNELS = ["@BNPREMIUMFREE", "@AxNetv", "@rfral_Azad", "@ZDGmail", "@BNBP
 SUPPORT_USERNAME = "BNBPremium"
 SPECIAL_USERS = [6902426681, 8589848955, 8010675451,7892579687,8224877957]
 
-bot = telebot.TeleBot(TOKEN)
+TOKEN = os.getenv("TOKEN")
+
+bot = telebot.TeleBot(TOKEN, threaded=False)
 
 db = sqlite3.connect("bot5130.db", check_same_thread=False)
-cursor = db.cursor()
-
-TOKEN = os.getenv("TOKEN")
-bot = telebot.TeleBot(TOKEN)
 
 # ------------------- ایجاد جداول -------------------
 cursor.execute("""
