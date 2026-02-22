@@ -20,7 +20,7 @@ BOT_USERNAME = bot.get_me().username
 
 # ------------------- ایجاد جداول -------------------
 
-conn = sqlite3.connect("bot5130.db", check_same_thread=False)
+conn = sqlite3.connect("bot510.db", check_same_thread=False)
 cursor = conn.cursor()
 
 cursor.execute("""
